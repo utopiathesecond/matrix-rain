@@ -1,0 +1,33 @@
+import curses
+import random
+import time
+
+anagram_chars = list("ILOVEYOUMARTIN")
+
+def matrix(stdscr):
+    curses.start_color()
+    curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)
+    stdscr.nodelay(True)
+    stdscr.clear()
+
+    height, width = stdscr.getmaxyx()
+    columns = [0] * width
+
+    while True:
+        stdscr.clear()
+        for i in range(width):
+            if columns[i] == 0:
+                if random.random() > 0.98:
+                    columns[i] = 1
+            elif columns[i] < height:
+                char = random.choice(anagram_chars)
+                if 0 <= columns[i] < height and 0 <= i < width - 1:
+                    stdscr.addstr(columns[i], i, char, curses.color_pair(1))
+                columns[i] += 1
+            else:
+                columns[i] = 0
+
+        stdscr.refresh()
+        time.sleep(0.1)  # Slower drip
+
+curses.wrapper(matrix)
